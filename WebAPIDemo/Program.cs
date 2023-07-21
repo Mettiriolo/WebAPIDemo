@@ -39,7 +39,7 @@ builder.Services.AddDbContext<MyDbContext>(options =>
 });
 
 //grpc
-builder.Services.AddGrpc();
+//builder.Services.AddGrpc();
 
 //注册身份验证服务和处理程序
 //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -63,6 +63,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapGrpcService<GreeterService>();
+//app.MapGrpcService<GreeterService>();
 
 app.Run();
