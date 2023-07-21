@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAPIDemo.EF;
@@ -30,11 +31,21 @@ builder.Services.Configure<MvcOptions>(options => {
     options.Filters.Add<TransactionScopeFilter>();
 });
 
+//DbContext
 builder.Services.AddDbContext<MyDbContext>(options =>
 {
     string? connectStr = builder.Configuration.GetConnectionString("LocalDb");
     options.UseSqlServer(connectStr);
 });
+
+//grpc
+builder.Services.AddGrpc();
+
+//注册身份验证服务和处理程序
+//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme,
+//    options=>builder.Configuration.Bind("JwtSettings",options));
+
 
 var app = builder.Build();
 
@@ -44,8 +55,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+//添加身份验证中间件
+//app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapGrpcService<GreeterService>();
 
 app.Run();
